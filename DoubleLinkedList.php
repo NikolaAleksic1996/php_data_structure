@@ -26,7 +26,7 @@ class DoubleLinkedList {
     {
         $newNode = new Node($data);
 
-        if ($this->head == null) {
+        if ($this->head === null) {
             $this->head = $newNode;
         } else {
             $this->tail->next = $newNode;
@@ -35,10 +35,11 @@ class DoubleLinkedList {
         $this->tail = $newNode;
     }
 
+    // Add at the start
     public function prepend($data)
     {
         $newNode = new Node($data);
-        if ($this->head == null) {
+        if ($this->head === null) {
             $this->tail = $newNode;
         } else {
             $this->head->prev = $newNode;
@@ -47,13 +48,48 @@ class DoubleLinkedList {
         $this->head = $newNode;
     }
 
+    public function insertAt($index, $data)
+    {
+        if ($index < 0) {
+            throw new Exception("Index cannot be negative.");
+        }
+
+        $newNode = new Node($data);
+
+        // Add at the start
+        if ($index === 0) {
+            $this->prepend($newNode);
+            return;
+        }
+
+        $current = $this->head;
+        $i = 0;
+
+        while ($current->next !== null && $i < $index) {
+            $current = $current->next;
+            $i++;
+        }
+
+        // Add at the end if teh index is greater than the list length
+        if ($current === null) {
+            $this->append($newNode);
+        } else {
+            $previous = $current->prev;
+            $previous->next = $newNode;
+            $newNode->prev = $previous;
+
+            $newNode->next = $current;
+            $current->prev = $newNode;
+        }
+    }
+
 
     public function traversForward()
     {
         $current = $this->head;
         $result = [];
 
-        while ($current != null) {
+        while ($current !== null) {
             $result[] = $current->data;
             $current = $current->next;
         }
@@ -70,5 +106,11 @@ $list = new DoubleLinkedList();
 $list->append(4);
 $list->append(5);
 $list->prepend(3);
+
+try {
+    $list->insertAt(5, 10);
+} catch (Exception $e) {
+    exit($e->getMessage());
+}
 
 $list->printForward();
