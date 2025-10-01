@@ -54,11 +54,8 @@ class DoubleLinkedList {
             throw new Exception("Index cannot be negative.");
         }
 
-        $newNode = new Node($data);
-
-        // Add at the start
         if ($index === 0) {
-            $this->prepend($newNode);
+            $this->prepend($data);
             return;
         }
 
@@ -71,9 +68,10 @@ class DoubleLinkedList {
         }
 
         // Add at the end if teh index is greater than the list length
-        if ($current === null) {
-            $this->append($newNode);
+        if ($current->next === null && $i < $index) {
+            $this->append($data);
         } else {
+            $newNode = new Node($data);
             $previous = $current->prev;
             $previous->next = $newNode;
             $newNode->prev = $previous;
@@ -108,7 +106,9 @@ $list->append(5);
 $list->prepend(3);
 
 try {
-    $list->insertAt(5, 10);
+    $list->insertAt(2, 10);
+    $list->insertAt(3, 11);
+    $list->insertAt(5, 12);
 } catch (Exception $e) {
     exit($e->getMessage());
 }
